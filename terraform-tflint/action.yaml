@@ -1,0 +1,50 @@
+name: terraform-tflint
+description: Run tflint tests against terraform environment
+
+inputs:
+  path:
+    description: Path to the terraform configuration
+    required: false
+    default: .
+  git_branch:
+    default: ""
+    description: 'custom branch for checkout'
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ inputs.git_branch }}
+
+    - name: Checkout tflint
+      uses: actions/checkout@v2
+      with:
+        repository: tfutils/tfenv
+        ref: master
+        path: ~/.local
+
+    - name: Installs SSH key
+      uses: webfactory/ssh-agent@v0.5.2
+      with:
+        ssh-private-key: ${{ secrets.GH_USER_PEPECOMMOPS_SSH_KEY_PRIVATE }}
+
+    - name: terraform init
+      working-directory: ./${{ matrix.environment }}
+      run: terraform init -backend=false
+
+    - name: Install TFLint
+      uses: terraform-linters/setup-tflint@v1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+
+    # TFLint looks up .tflint.hcl according to the following priority:
+    # Current directory (./.tflint.hcl)
+    # Home directory (~/.tflint.hcl)
+    - name: Init TFLint
+      run: tflint --init
+
+    - name: Run TFLint
+      run: tflint
