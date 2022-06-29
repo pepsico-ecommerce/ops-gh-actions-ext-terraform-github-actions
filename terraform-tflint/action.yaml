@@ -14,13 +14,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Checkout tflint
-      uses: actions/checkout@v2
-      with:
-        repository: tfutils/tfenv
-        ref: master
-        path: ~/.local
-
     - name: Installs SSH key
       uses: webfactory/ssh-agent@v0.5.2
       with:
@@ -29,7 +22,9 @@ runs:
     - name: terraform init
       working-directory: ${{ inputs.path }}
       shell: bash
-      run: terraform init -backend=false
+      run: |
+        git clone https://github.com/tfutils/tfenv.git ~/.local
+        terraform init -backend=false
 
     - name: Install TFLint
       uses: terraform-linters/setup-tflint@v1
