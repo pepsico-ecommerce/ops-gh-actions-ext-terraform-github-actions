@@ -24,7 +24,7 @@ runs:
     - name: Installs SSH key
       uses: webfactory/ssh-agent@v0.5.2
       with:
-        ssh-private-key: ${{ inputs.ssh_key }}
+        ssh-private-key: ${{ env.TERRAFORM_SSH_KEY }}
 
     - name: terraform init
       working-directory: ${{ inputs.path }}
@@ -34,7 +34,7 @@ runs:
     - name: Install TFLint
       uses: terraform-linters/setup-tflint@v1
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ env.GITHUB_TOKEN }}
 
     # TFLint looks up .tflint.hcl according to the following priority:
     # Current directory (./.tflint.hcl)
