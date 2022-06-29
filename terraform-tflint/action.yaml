@@ -6,6 +6,10 @@ inputs:
     description: Path to the terraform configuration
     required: false
     default: .
+  ssh_key:
+    description: ssh key for checkout tf modules
+    required: true
+    default: ""
 
 runs:
   using: "composite"
@@ -20,10 +24,11 @@ runs:
     - name: Installs SSH key
       uses: webfactory/ssh-agent@v0.5.2
       with:
-        ssh-private-key: ${{ secrets.GH_USER_PEPECOMMOPS_SSH_KEY_PRIVATE }}
+        ssh-private-key: ${{ inputs.ssh_key }}
 
     - name: terraform init
       working-directory: ${{ inputs.path }}
+      shell: bash
       run: terraform init -backend=false
 
     - name: Install TFLint
@@ -36,8 +41,10 @@ runs:
     # Home directory (~/.tflint.hcl)
     - name: Init TFLint
       working-directory: ${{ inputs.path }}
+      shell: bash
       run: tflint --init
 
     - name: Run TFLint
       working-directory: ${{ inputs.path }}
+      shell: bash
       run: tflint
