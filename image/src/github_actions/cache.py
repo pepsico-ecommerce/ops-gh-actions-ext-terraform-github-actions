@@ -9,8 +9,6 @@ class ActionsCache:
     def __init__(self, cache_dir: Path, label: str=None):
         self._cache_dir = cache_dir
         self._label = label or self._cache_dir
-        print(cache_dir)
-        print(label)
 
     def __setitem__(self, key, value):
         if value is None:
@@ -23,7 +21,7 @@ class ActionsCache:
         with open(os.path.join(self._cache_dir, key), 'w') as f:
             f.write(value)
             debug(f'Wrote {key} to {self._label}')
-            print(key)
+            print(f'Key is {key} and label is {self._label}')
 
     def __getitem__(self, key):
         if os.path.isfile(os.path.join(self._cache_dir, key)):
