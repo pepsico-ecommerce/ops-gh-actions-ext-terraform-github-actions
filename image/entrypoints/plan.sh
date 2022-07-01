@@ -88,6 +88,8 @@ fi
 
 mkdir -p "$GITHUB_WORKSPACE/$WORKSPACE_TMP_DIR"
 cp "$STEP_TMP_DIR/plan.txt" "$GITHUB_WORKSPACE/$WORKSPACE_TMP_DIR/plan.txt"
+echo "$STEP_TMP_DIR/plan.txt"
+echo "$GITHUB_WORKSPACE/$WORKSPACE_TMP_DIR/plan.txt"
 set_output text_plan_path "$WORKSPACE_TMP_DIR/plan.txt"
 
 if [[ -n "$PLAN_OUT" ]]; then
